@@ -12,5 +12,5 @@ public interface CuentaService {
 
     BigDecimal revisarSaldo(Long cuentaId);
 
-    void transferir(Long numeroCuentaOrigen, Long numeroCuentaMonto, BigDecimal monto);
+    void transferir(Long numeroCuentaOrigen, Long numeroCuentaMonto, BigDecimal monto, Long bancoId);
 }
