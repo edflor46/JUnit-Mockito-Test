@@ -9,7 +9,11 @@ import com.edflor.test.springboot.app.services.CuentaService;
 import com.edflor.test.springboot.app.services.CuentaServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
 
@@ -20,20 +24,25 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class SpringbootTestApplicationTests {
 
+    @MockBean
     CuentaRepository cuentaRepository;
+
+    @MockBean
     BancoRepository bancoRepository;
+
+    @Autowired
     CuentaService service;
 
-    @BeforeEach
+   /* @BeforeEach
     void setUp() {
-        cuentaRepository = mock(CuentaRepository.class);
+        *//*cuentaRepository = mock(CuentaRepository.class);
         bancoRepository = mock(BancoRepository.class);
-        service = new CuentaServiceImpl(cuentaRepository, bancoRepository);
-    }
+        service = new CuentaServiceImpl(cuentaRepository, bancoRepository);*//*
+    }*/
 
     @Test
     void contextLoads() {
-        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta());
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta01());
         when(cuentaRepository.findById(2L)).thenReturn(crearCuenta02());
         when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
@@ -60,11 +69,15 @@ class SpringbootTestApplicationTests {
         verify(bancoRepository, times(2)).findById(1L);
         verify(bancoRepository).update(any(Banco.class));
 
+        verify(cuentaRepository, times(6)).findById(anyLong());
+        verify(cuentaRepository, never()).findAll();
+
+
     }
 
     @Test
     void contextLoads2() {
-        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta());
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta01());
         when(cuentaRepository.findById(2L)).thenReturn(crearCuenta02());
         when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
@@ -92,7 +105,20 @@ class SpringbootTestApplicationTests {
 
         verify(bancoRepository, times(1)).findById(1L);
         verify(bancoRepository, never()).update(any(Banco.class));
-
+        verify(cuentaRepository, times(5)).findById(anyLong());
+        verify(cuentaRepository, never()).findAll();
     }
 
+    @Test
+    void contextLoads3() {
+        when(cuentaRepository.findById(1L)).thenReturn(crearCuenta01());
+
+        Cuenta cuenta1 = service.findById(1L);
+        Cuenta cuenta2 = service.findById(1L);
+
+        assertSame(cuenta1, cuenta2);
+        assertEquals("Eduardo", cuenta1.getPersona());
+
+        verify(cuentaRepository, times(2)).findById(1L);
+    }
 }

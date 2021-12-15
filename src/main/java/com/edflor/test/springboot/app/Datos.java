@@ -13,7 +13,7 @@ public class Datos {
 
     //public static final Banco BANCO = new Banco(1L, "El banco financiero", 0);
 
-    public static Cuenta crearCuenta(){
+    public static Cuenta crearCuenta01(){
         return new Cuenta(1L, "Eduardo", new BigDecimal("1000"));
     }
 
