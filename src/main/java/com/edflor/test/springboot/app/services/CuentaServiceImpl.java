@@ -20,7 +20,7 @@ public class CuentaServiceImpl implements CuentaService{
 
     @Override
     public int revisarTotalTransferencia(Long id) {
-        Banco banco = bancoRepository.findById(id);
+        Banco banco = bancoRepository.findById(id).orElse(null);
         return banco.getTotalTransferencia();
     }
 
@@ -46,9 +46,9 @@ public class CuentaServiceImpl implements CuentaService{
         cuentaDestino.credito(monto);
         cuentaRepository.save(cuentaDestino);
 
-        Banco banco = bancoRepository.findById(bancoId);
+        Banco banco = bancoRepository.findById(bancoId).orElse(null);
         int totalTransferencia = banco.getTotalTransferencia();
         banco.setTotalTransferencia(++totalTransferencia);
-        bancoRepository.update(banco);
+        bancoRepository.save(banco);
     }
 }
